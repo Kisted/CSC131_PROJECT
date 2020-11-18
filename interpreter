@@ -1,0 +1,91 @@
+// Insert data from CSV file to database scanner code
+
+import java.io.*;
+import java.sql.*;
+
+import org.supercsv.cellprocessor.Optional;
+import org.supercsv.cellprocessor.ParseDouble;
+import org.supercsv.cellprocessor.constraint.NotNull;
+import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.io.CsvBeanReader;
+import org.supercsv.io.ICsvBeanReader;
+import org.supercsv.prefs.CsvPreference;
+
+public class Interpreter {
+  public static void main(String[] args) {
+    String url = "";
+    String username = "";
+    String password = "";
+
+    String csvFilePath = "";
+
+    int size = 20;
+
+    Connection connection = null;
+
+    ICsvBeanReader beanReader = null;
+    CellProcessor[] processor = new CellProcessor[] {
+      new ParseInt(), // Year
+      new NotNull(), // Category
+      new ParseBool(), // Winner
+      new NotNull(), // Entity
+
+    };
+
+    try {
+
+      connection = DriverManager.getConnection(url, username, password);
+      connection.serAutoCommit(false);
+
+      String sql = "INSERT INTO awards (year, category, winner, entity) VALUES(?, ?, ?, ?)";
+      PreparedStatement statement = connection.prepareStatement(sql);
+
+      beanReader = new CsvBeanReader(new FileReader(csvFilePath), CsvPreference.STANDARD_PREFERENCE);
+
+      beanReader.getHeader(true); // header line skipped
+
+      String[] header = {"year", "category", "winner", "entity"};
+      Awards bean = null;
+
+      int count = 0;
+
+      while ((bean = beanReader.read(Awards.class, header, processors)) != null) {
+        int year = bean.getYear();
+        String category = bean.getCategory();
+        boolean winner = bean.getWinner();
+        String entity = bean.getEntity();
+
+        statement.setInt(1, year);
+        statement.setString(2, category);
+        statement.setBoolean(3, winner);
+        statement.setString(4, entity);
+
+        statement.addBatch();
+
+        if (count % batchSize == 0) {
+            statement.executeBatch();
+
+        }
+      }
+
+      beanReader.close();
+
+      // run remaining queries
+      statement.executeBatch();
+
+      connection.commit();
+      connection.close();
+
+      } catch (IOException ex) {
+          System.err.println(ex);
+      } catch (SQLException ex) {
+          ex.printStackTrace();
+
+          try {
+              connection.rollback();
+          } catch (SQLException e) {
+              e.printStackTrace();
+          }
+      }
+  }
+}
