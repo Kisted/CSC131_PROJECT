@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.nio.file.*;
 import java.net.*;
 import java.io.*;
-import org.json.JSONObject;
+import org.json.JSONArray;
 import java.util.Iterator;
 
 public class URLMovieServlet extends HttpServlet {
@@ -26,11 +26,12 @@ public class URLMovieServlet extends HttpServlet {
 		Statement statement = null;
 		Connection connection = null;
 		
+		
+		
 		URL reqURL = new URL(req.getRequestURI());
 		Path reqPath = Paths.get(reqURL.getPath()).normalize();
 		String reqPathString = reqPath.toString();
-		String pathArray[] = reqPathString.split("/");
-		
+		String pathArray[] = reqPathString.split("\");
 		
 		try {
 			
@@ -77,7 +78,7 @@ public class URLMovieServlet extends HttpServlet {
 				
 				if (columnName != null) {
 					
-					selectStatement.concat(columnName + " = " + pathArray[0]);
+					selectStatement.concat(columnName + " = " + pathArray[i]);
 					
 				}
 				
@@ -116,3 +117,39 @@ public class URLMovieServlet extends HttpServlet {
 		
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
