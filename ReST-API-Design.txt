@@ -25,10 +25,13 @@ Initial ideas...
 Idea URIs using category
 
 	/cat -> returns all nominees for cat (~200 entries)
+	SELECT * from awards where category='yyyy'
 
 	/cat/year -> returns all nomineees for cat in year (~10 entries)
+	SELECT * from awards where category='yyyy' and year=xxxx
 
 	/cat/win -> returns all winners for cat (~100 entries)
+	Select * from awards where category='yyyy' and winner=x
 
 	/cat/losers -> returns all losers for cat (~1000 entries)
 
