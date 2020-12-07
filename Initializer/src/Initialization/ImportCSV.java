@@ -23,7 +23,7 @@ public static void main(String[] args) {
  
 	String username = "SA";
 	String password = "<Echo135Delta>";
-	String dataBaseURL = "jdbc:sqlserver://bristed.com:1401;databaseName=movies";
+	String dataBaseURL = "jdbc:sqlserver://bristed.com:1401;databaseName=awards";
 	 
 	
 	String csvFilePath = "./lib/datahubio_oscar_data_csv.csv";

@@ -21,42 +21,39 @@ public class URLMovieServlet extends HttpServlet {
 		
 		String username = "SA";
 		String password = "<Echo135Delta>";
-		String dataBaseURL = "jdbc:sqlserver://bristed.com:1401;databaseName=movies";
+		String dataBaseURL = "jdbc:sqlserver://bristed.com:1401;databaseName=awards";
 		
-		
+		Statement statement = null;
 		Connection connection = null;
 		
 		URL reqURL = new URL(req.getRequestURI());
 		Path reqPath = Paths.get(reqURL.getPath()).normalize();
 		String reqPathString = reqPath.toString();
-		
 		String pathArray[] = reqPathString.split("/");
 		
-	}
-	
-	public boolean checkColumn(String column, String pathPiece, Connection connection) {
-		
-		String sqlTestColumn = "SELECT CASE WHEN EXISTS (SELECT 1 FROM [awards] WHERE " + column + " = ?) THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END AS 'result column'";
 		
 		try {
 			
-			PreparedStatement statement = connection.prepareStatement(sqlTestColumn);
-			statement.setString(1, pathPiece);
-			ResultSet results = statement.executeQuery();
-			
-			return results.getBoolean(1);
+			connection = DriverManager.getConnection(dataBaseURL, username, password);
+			connection.setAutoCommit(false);
+			statement = connection.createStatement();
+			ResultSet rs = statement.executeQuery(BuildSQLSelectStatement(pathArray, connection));
 			
 		} catch (SQLException e) {
 			
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return false;
+			
 		}
 		
 		
-	}
+		
 	
-	public String BuildSQLSelectStatment(String pathArray[], Connection connection) {
+		
+		
+	}
+
+	private String BuildSQLSelectStatement(String pathArray[], Connection connection) {
 		
 		String [] columnHeaderArray= new String[] { "year", "category", "winner", "entity"};
 		
@@ -94,7 +91,28 @@ public class URLMovieServlet extends HttpServlet {
 		
 		}
 		
-		return selectStatement;
+		return selectStatement+ " for json";
 	}
 	
+	private boolean checkColumn(String column, String pathPiece, Connection connection) {
+		
+		String sqlTestColumn = "SELECT CASE WHEN EXISTS (SELECT 1 FROM [awards] WHERE " + column + " = ?) THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END AS 'result column'";
+		
+		try {
+			
+			PreparedStatement statement = connection.prepareStatement(sqlTestColumn);
+			statement.setString(1, pathPiece);
+			ResultSet results = statement.executeQuery();
+			
+			return results.getBoolean(1);
+			
+		} catch (SQLException e) {
+			
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		
+		
+	}
 }
