@@ -21,6 +21,10 @@ Initial ideas...
 	/winners -> lists all unique winners (~1000 entries)
 
 	/losers -> lists all unique losers (~10,000 entries)
+
+	SQL Logic is
+
+		select distinct xxxx from awards
 	
 Idea URIs using category
 

@@ -16,140 +16,143 @@ import java.util.Iterator;
 
 public class URLMovieServlet extends HttpServlet {
 
-	@Override
-	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-		
+	public static void main(String[] args) {
 		String username = "SA";
 		String password = "<Echo135Delta>";
 		String dataBaseURL = "jdbc:sqlserver://bristed.com:1401;databaseName=awards";
-		
 		Statement statement = null;
 		Connection connection = null;
 		
 		
 		
-		URL reqURL = new URL(req.getRequestURI());
-		Path reqPath = Paths.get(reqURL.getPath()).normalize();
-		String reqPathString = reqPath.toString();
-		String pathArray[] = reqPathString.split("\");
 		
+		//URL reqURL = new URL(req .getRequestURI());
+		//URL reqURL;
 		try {
+			
+			URL reqURL = new URL("http://localhost:8080/best+picture/1990/losers");
+			
+			String[] pathArray = sanitizeEndPoint(reqURL);
 			
 			connection = DriverManager.getConnection(dataBaseURL, username, password);
 			connection.setAutoCommit(false);
+			
+			String selectStatement = BuildSQLSelectStatement(pathArray);
+			System.out.println(selectStatement);
+			
 			statement = connection.createStatement();
-			ResultSet rs = statement.executeQuery(BuildSQLSelectStatement(pathArray, connection));
+			ResultSet rs = statement.executeQuery(selectStatement);
 			
-		} catch (SQLException e) {
 			
+			rs.next();
+			
+			String resultString = (rs.getObject(1).toString());
+			resultString = formatJSON(resultString);
+			System.out.println(resultString);
+			
+		} catch (MalformedURLException e1) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-			
+			e1.printStackTrace();
+		
+		} catch (SQLException e) {
+			//TODO Auto-generated catch block
+			e.printStackTrace();	
 		}
-		
-		
+			
+	}
 		
 	
+	
+	@Override
+	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+	
+	}
+	
+	private static String[] sanitizeEndPoint(URL url) {
 		
+		Path reqPath = Paths.get(url.getPath()).normalize();
+		String reqPathString = reqPath.toString().replaceFirst("\\\\","");
 		
+		reqPathString = reqPathString.replace("winners", "1");
+		reqPathString = reqPathString.replace("winner", "1");
+		reqPathString = reqPathString.replace("losers", "0");
+		
+		reqPathString = reqPathString.replace("+"," ");
+		
+		String pathArray[] = reqPathString.split("\\\\");
+		
+		return pathArray;
 	}
 
-	private String BuildSQLSelectStatement(String pathArray[], Connection connection) {
+	private static String BuildSQLSelectStatement(String pathArray[]) {
 		
-		String [] columnHeaderArray= new String[] { "year", "category", "winner", "entity"};
+		String column1 = "year";
+		String column2 = "category";
+		String column3 = "winner";
+		int count = 1;
 		
-		String selectStatement = "SELECT * from awards where ";
+		String selectStatement = "select * from awards where ";
 		
-		String columnName;
-		
-		int count = 0; 
-		
-		for(int i = 0; i < pathArray.length;i++) {
+		for (int i = 0; i< pathArray.length; i++) {
 			
-			columnName = null;
-			
-			for(int j = 0; j < columnHeaderArray.length; j++) {
+			//check if pathArray[i] can be cast as an integer
+			if(isInt(pathArray[i])) {
 				
-				if (checkColumn(columnHeaderArray[j], pathArray[i], connection)) {
+				
+				//check if integer it is 0 or one
+				if(isBinary(pathArray[i])) {
+					selectStatement = selectStatement.concat(column3 + " = " + pathArray[i]);
 					
-					columnName = columnHeaderArray[j];
-				
+				//if is not binary, lookup from year column	
+				}else {
+					selectStatement = selectStatement.concat(column1 + " = " + pathArray[i]);
 				}
-				
-				if (columnName != null) {
-					
-					selectStatement.concat(columnName + " = " + pathArray[i]);
-					
-				}
-				
-				if (pathArray.length > 1 && count < pathArray.length-1) {
-				
-					selectStatement.concat(" and ");
-					count ++;
-					
-				}
+				//if it is not cast-able as an integer, lookup from 'category' column
+			}else {
+				selectStatement = selectStatement.concat(column2 + " like '" + pathArray[i] + "%'");
 			}
-		
+			if(count < pathArray.length) {
+				selectStatement = selectStatement.concat(" and ");
+				count++;
+			}
 		}
 		
-		return selectStatement+ " for json";
-	}
-	
-	private boolean checkColumn(String column, String pathPiece, Connection connection) {
+		selectStatement = selectStatement.concat(" ORDER BY year ASC, Entity ASC, category ASC FOR JSON AUTO");
 		
-		String sqlTestColumn = "SELECT CASE WHEN EXISTS (SELECT 1 FROM [awards] WHERE " + column + " = ?) THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END AS 'result column'";
+		return selectStatement;
+	}
+	private static boolean isInt(String s) {
 		
 		try {
-			
-			PreparedStatement statement = connection.prepareStatement(sqlTestColumn);
-			statement.setString(1, pathPiece);
-			ResultSet results = statement.executeQuery();
-			
-			return results.getBoolean(1);
-			
-		} catch (SQLException e) {
-			
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Integer.parseInt(s);
+		}catch(NumberFormatException e) {
 			return false;
 		}
 		
+		return true;
 		
 	}
+	
+	private static boolean isBinary(String s) {
+		
+		if (Integer.parseInt(s) == 0 || Integer.parseInt(s) == 1) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+	
+	private static String formatJSON(String s) {
+		
+		s = s.replace("[{", "[{\n");
+		s = s.replace("},{", "},\n{");
+		s = s.replace(",\"", ",\n\"");
+		s = s.replace("{", "{\n");
+		s = s.replace("}", "\n}");
+		s = s.replace("}]", "\n}]");
+		
+		return s;
+		
+	}
+	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

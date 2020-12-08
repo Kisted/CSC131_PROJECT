@@ -1,0 +1,107 @@
+AWARDS API v. 0.0.1
+
+
+ABOUT:
+
+The AWARDS API provides access to an underlying databse utilizing natural-language and intuitive pathing. It does this by collapsing client-generated URLs into valid SQL statements which pull the intended information from the database, regardless of order.
+
+STRUCTURE:
+
+The AWARDS API takes an HTTP-style GET request and utilizes the address of the resource to navigate through the columns of the table, reverse generating key-value pairs off of each step in the URL path. As such, order of the values is irrelevant, they are dynamically assigned to an appropriate key. In order to make a call to the API, at least one value must be requested. The API supports up to three values at a time, so long as each one can be assigned a unique key.
+
+The general structure of an API call is as follows
+
+	http://host.com:8080/val-1/val2/val-3
+
+In a call, spaces are not valid, and must be replaced with the '+' character. Aside from that, all values should be lowercase alphanumeric characters only.
+
+The underlying table‘s columns provide the key portion of a key-value pair, and are as follows:
+
+	Year | Category | Winner | Entity
+
+Where year represents the year of the award associated with entity, category represents the category of the award associated with entity, and winner represents if entity won the associated award. Thus, each key except for entity can be assigned a value in order to filter the table accordingly.
+
+VALID VALUES PER KEY:
+
+The AWARDS API attempts to match the user-provided values with keys that in turn correspond with the lookup table. Valid Key Value Pairs are shown below
+
+	KEY year; VALUE integer
+
+		This key associates any integer value in the URL with the 'year' column of the lookup table except 0 and 1, which are reserved for the Winner Key. 
+
+	KEY Winner; VALUE (string or integer)
+	
+		This key associates certain strings and certain integers with the winner column of the table.
+		
+		Valid Values are: {'winner', 'winners', 1, 'losers', 0}
+		
+		The API internally converts the above strings to their equivalent Boolean value.
+	
+	KEY Category; VALUE string
+
+		The Category key has, by far, the most valid keys. All string values except those reserved for the Winner Key are assigned to this key. Valid values are listed below, but be aware that all spaces must be replaced with the ‘+‘ character in the URL for the API Call. While it is possible to only use a portion of the value, ex 'best' instead of 'best+picture' this behaviour will not be supported by the API and thus may provide results that do not match expectation.
+
+Valid Values for Category Key can be found in index A.
+
+SEARCH FUNCTION
+
+	This api allows for a request to manually set a key-value pair via http parameter passing. To do so, call the "search" endpoint in the typical http form, as in the example below. Any valid values in the 'VALID VALUES PER KEY' section are still valid for the search function, and the same formatting rules apply. Valid keys are category, year, and winner.
+
+		http://example.com:8080/search?key1=val1&key2=val2
+
+
+INDEX A: VALID CATEGORY KEY VALUES
+|-----------------------------------------------------------------------|
+|ACTOR                                                                                               |
+|ACTOR IN A LEADING ROLE                                                                             |
+|ACTOR IN A SUPPORTING ROLE                                                                          |
+|ACTRESS                                                                                             |
+|ACTRESS IN A LEADING ROLE                                                                           |
+|ACTRESS IN A SUPPORTING ROLE                                                                        |
+|ANIMATED FEATURE FILM                                                                               |
+|ART DIRECTION                                                                                       |
+|ASSISTANT DIRECTOR                                                                                  |
+|AWARD OF COMMENDATION                                                                               |
+|BEST MOTION PICTURE                                                                                 |
+|BEST PICTURE                                                                                        |
+|CINEMATOGRAPHY                                                                                      |
+|COSTUME DESIGN                                                                                      |
+|DANCE DIRECTION                                                                                     |
+|DIRECTING                                                                                           |
+|DOCUMENTARY                                                                                         |
+|ENGINEERING EFFECTS                                                                                 |
+|FILM EDITING                                                                                        |
+|FOREIGN LANGUAGE FILM                                                                               |
+|GORDON E. SAWYER AWARD                                                                              |
+|HONORARY AWARD                                                                                      |
+|HONORARY FOREIGN LANGUAGE FILM AWARD                                                                |
+|IRVING G. THALBERG MEMORIAL AWARD                                                                   |
+|JEAN HERSHOLT HUMANITARIAN AWARD                                                                    |
+|JOHN A. BONNER MEDAL OF COMMENDATION                                                                |
+|MAKEUP                                                                                              |
+|MAKEUP AND HAIRSTYLING                                                                              |
+|MEDAL OF COMMENDATION                                                                               |
+|MUSIC 												     |
+|OUTSTANDING MOTION PICTURE                                                                          |
+|OUTSTANDING PICTURE                                                                                 |
+|OUTSTANDING PRODUCTION                                                                              |
+|PRODUCTION DESIGN                                                                                   |
+|SCIENTIFIC AND TECHNICAL AWARD									     |
+|SHORT FILM 											     |
+|SHORT SUBJECT 											     |
+|SOUND                                                                                               |
+|SOUND EDITING                                                                                       |
+|SOUND EFFECTS                                                                                       |
+|SOUND EFFECTS EDITING                                                                               |
+|SOUND MIXING                                                                                        |
+|SOUND RECORDING                                                                                     |
+|SPECIAL ACHIEVEMENT AWARD                                                                           |
+|SPECIAL ACHIEVEMENT AWARD 									     |
+|SPECIAL AWARD                                                                                       |
+|SPECIAL EFFECTS                                                                                     |
+|SPECIAL FOREIGN LANGUAGE FILM AWARD                                                                 |
+|SPECIAL VISUAL EFFECTS                                                                              |
+|UNIQUE AND ARTISTIC PICTURE                                                                         |
+|VISUAL EFFECTS                                                                                      |
+|WRITING                                                                                             
+
