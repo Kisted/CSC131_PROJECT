@@ -7,7 +7,7 @@ The AWARDS API provides access to an underlying databse utilizing natural-langua
 
 STRUCTURE:
 
-The AWARDS API takes an HTTP-style GET request and utilizes the address of the resource to navigate through the columns of the table, reverse generating key-value pairs off of each step in the URL path. As such, order of the values is irrelevant, they are dynamically assigned to an appropriate key. In order to make a call to the API, at least one value must be requested. The API supports up to three values at a time, so long as each one can be assigned a unique key.
+The AWARDS API takes an HTTP-style GET request and utilizes the address of the resource to navigate through the columns of the table, reverse generating key-value pairs off of each step in the URL path. As such, order of the values is irrelevant, they are dynamically assigned to an appropriate key. In order to make a call to the API, at least one value must be requested. The API supports up to three values at a time, so long as each one can be assigned a unique key. Any invalid request or conflicting requests should return an empty set.
 
 The general structure of an API call is as follows
 
@@ -25,31 +25,32 @@ VALID VALUES PER KEY:
 
 The AWARDS API attempts to match the user-provided values with keys that in turn correspond with the lookup table. Valid Key Value Pairs are shown below
 
-	KEY year; VALUE integer
+KEY year; VALUE integer
 
-		This key associates any integer value in the URL with the 'year' column of the lookup table except 0 and 1, which are reserved for the Winner Key. 
+	This key associates any integer value in the URL with the 'year' column of the lookup table except 0 and 1, which are reserved for the Winner Key. 
 
-		Valid values for year are [1927-2017] inclusive.
+	Valid values for year are [1927-2017] inclusive.
 
-	KEY Winner; VALUE (string or integer)
+KEY Winner; VALUE (string or integer)
 	
-		This key associates certain strings and certain integers with the winner column of the table.
+	This key associates certain strings and certain integers with the winner column of the table.
 		
-		Valid Values are: {'winner', 'winners', 1, 'losers', 0}
+	Valid Values are: {'winner', 'winners', 1, 'losers', 0}
 		
-		The API internally converts the above strings to their equivalent Boolean value.
+	Note: The API internally converts the above strings to their equivalent Boolean value.
 	
-	KEY Category; VALUE string
+KEY Category; VALUE string
 
-		The Category key has, by far, the most valid keys. All string values except those reserved for the Winner Key are assigned to this key. Valid values are listed below, but be aware that all spaces must be replaced with the ‘+‘ character in the URL for the API Call. While it is possible to only use a portion of the value, ex 'best' instead of 'best+picture' this behaviour will not be supported by the API and thus may provide results that do not match expectation.
+	The Category key has, by far, the most valid keys. All string values except those reserved for the Winner Key are assigned to this key. Valid values are listed below, but be aware that all spaces must be replaced with the ‘+‘ character in the URL for the API Call.
 
-Valid Values for Category Key can be found in index A.
+	Valid Values for Category Key can be found in index A.
 
 SEARCH FUNCTION
 
-	This api allows for a request to manually set a key-value pair via http parameter passing. To do so, call the "search" endpoint in the typical http form, as in the example below. Any valid values in the 'VALID VALUES PER KEY' section are still valid for the search function, and the same formatting rules apply. Valid keys are category, year, and winner.
+	This api allows for a request to manually set a key-value pair via http parameter passing. To do so, call the "search" endpoint in the typical http form, as in the example below. Any valid values in the 'VALID VALUES PER KEY' section are still valid for the search function, with the exception of the winner key, and the same formatting rules apply. Valid keys are category, year, and winner. 
+	Valid winner key values are only 0 and 1, due to the implementation of the search logic. Thus, a search for the winner of 'best picture' in 1980 would look like
 
-		http://example.com:8080/search?key1=val1&key2=val2
+		http://example.com:8080/search?category=best+picture&year=1980&winner=1
 
 
 INDEX A: VALID CATEGORY KEY VALUES

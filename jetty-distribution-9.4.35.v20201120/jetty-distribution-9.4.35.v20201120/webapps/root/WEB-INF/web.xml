@@ -1,0 +1,13 @@
+<web-app>
+
+	<servlet>
+		<servlet-name>root</servlet-name>
+		<servlet-class>servlets.AwardsAPIServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>root</servlet-name>
+		<url-pattern>/*</url-pattern>
+	</servlet-mapping>
+
+</web-app>
