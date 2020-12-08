@@ -1,3 +1,4 @@
+THE CONTENTS OF THIS DIRECTORY 'webapps' MUST BE COPIED INTO THE 'webapps' FOLDER OF A STANDALONE JETTY DISTRIBUTION
 
 This directory is scanned by the WebAppDeployer provider for web
 applications to deploy using the following conventions:
