@@ -29,6 +29,8 @@ The AWARDS API attempts to match the user-provided values with keys that in turn
 
 		This key associates any integer value in the URL with the 'year' column of the lookup table except 0 and 1, which are reserved for the Winner Key. 
 
+		Valid values for year are [1927-2017] inclusive.
+
 	KEY Winner; VALUE (string or integer)
 	
 		This key associates certain strings and certain integers with the winner column of the table.

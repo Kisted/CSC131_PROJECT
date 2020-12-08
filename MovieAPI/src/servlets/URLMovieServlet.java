@@ -144,12 +144,9 @@ public class URLMovieServlet extends HttpServlet {
 	
 	private static String formatJSON(String s) {
 		
-		s = s.replace("[{", "[{\n");
-		s = s.replace("},{", "},\n{");
-		s = s.replace(",\"", ",\n\"");
-		s = s.replace("{", "{\n");
-		s = s.replace("}", "\n}");
-		s = s.replace("}]", "\n}]");
+		s = s.replace("[", "[ \n    ");
+		s = s.replace("},", "},\n    ");
+		s = s.replace("{\"", "{ \n    \"");
 		
 		return s;
 		
