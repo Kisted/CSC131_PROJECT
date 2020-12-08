@@ -12,8 +12,9 @@ import java.nio.file.*;
 import java.net.*;
 import org.json.*;
 
-public class URLMovieServlet extends HttpServlet {
-
+public class AwardsAPIServlet extends HttpServlet {
+	private static final long serialVersionUID= 1L;
+	
 	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
 	

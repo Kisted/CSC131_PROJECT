@@ -98,7 +98,6 @@ INDEX A: VALID CATEGORY KEY VALUES
 |SOUND MIXING                                                                                        |
 |SOUND RECORDING                                                                                     |
 |SPECIAL ACHIEVEMENT AWARD                                                                           |
-|SPECIAL ACHIEVEMENT AWARD 									     |
 |SPECIAL AWARD                                                                                       |
 |SPECIAL EFFECTS                                                                                     |
 |SPECIAL FOREIGN LANGUAGE FILM AWARD                                                                 |
