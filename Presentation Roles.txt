@@ -1,0 +1,15 @@
+Subjects
+
+	Database: Keeghan
+
+	Initializer: Christian
+
+	Skill Debt: Wilmer
+
+	API:Keeghan
+
+	Client: Mikey
+
+	Project Overview/Vision: Jose
+
+	Scrum Process: Santosh
