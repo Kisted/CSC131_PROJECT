@@ -68,6 +68,9 @@ public class RESTApiClient {
 		
 		String urlString = "http://localhost:8080/";
 		
+		catInput = catInput.replaceAll("\\s+", "+");
+		winnerInput = winnerInput.replaceAll("\\s+", "+");
+		
 		if (catInput != null) {
 			urlString += catInput + "/";
 		}
@@ -125,11 +128,11 @@ public class RESTApiClient {
 			
 			String catInput = scanner.nextLine();
 			
-			if (catInput == "LIST" || catInput == "List" || catInput == "list") {
+			if (catInput.equalsIgnoreCase("list")) {
 				displayCategories();
 				System.out.println("Please enter the Award Category below\n");
 				catInput = scanner.nextLine();
-			} else if (catInput == "SKIP" || catInput == "Skip" || catInput == "skip") {
+			} else if (catInput.equalsIgnoreCase("skip")) {
 				catInput = null;
 			}
 				
@@ -145,7 +148,7 @@ public class RESTApiClient {
 			int yearInput = 0;
 			
 			
-			if (yearInitialInput == "SKIP" || yearInitialInput == "Skip" || yearInitialInput == "skip") {
+			if (yearInitialInput.equalsIgnoreCase("skip")) {
 				yearInitialInput = null;
 			}else {
 				yearInput = Integer.parseInt(yearInitialInput);
@@ -159,9 +162,9 @@ public class RESTApiClient {
 			
 			String winnerInput = scanner.nextLine();
 			
-			if (winnerInput == "WINNER" || winnerInput == "Winner" || winnerInput == "winner") {
+			if (winnerInput.equalsIgnoreCase("winner")) {
 				winnerInput = "winner";
-			} else if (winnerInput == "LOSER" || winnerInput == "Loser" || winnerInput == "loser") {
+			} else if (winnerInput.equalsIgnoreCase("loser")) {
 				winnerInput = "losers";
 			} else {
 				winnerInput = null;
@@ -203,14 +206,13 @@ public class RESTApiClient {
 			System.out.println("To make another search, press any key");
 			String finalInput = scanner.nextLine();
 			
-			if (finalInput == "EXIT" || finalInput == "Exit" || finalInput == "exit") {
+			if (finalInput.equalsIgnoreCase("exit")) {
 				exit = true;
 			}
 		}
 		
 	}
 
-	//public static String getAwardData(String )
 	
 }
 
