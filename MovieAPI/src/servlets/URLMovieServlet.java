@@ -10,27 +10,22 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.nio.file.*;
 import java.net.*;
-import java.io.*;
-import org.json.JSONArray;
-import java.util.Iterator;
+import org.json.*;
 
 public class URLMovieServlet extends HttpServlet {
 
-	public static void main(String[] args) {
+	@Override
+	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+	
 		String username = "SA";
 		String password = "<Echo135Delta>";
 		String dataBaseURL = "jdbc:sqlserver://bristed.com:1401;databaseName=awards";
 		Statement statement = null;
 		Connection connection = null;
 		
-		
-		
-		
-		//URL reqURL = new URL(req .getRequestURI());
-		//URL reqURL;
 		try {
 			
-			URL reqURL = new URL("http://localhost:8080/best+picture/1990/losers");
+			URL reqURL = new URL(req.getRequestURI());
 			
 			String[] pathArray = sanitizeEndPoint(reqURL);
 			
@@ -38,7 +33,7 @@ public class URLMovieServlet extends HttpServlet {
 			connection.setAutoCommit(false);
 			
 			String selectStatement = BuildSQLSelectStatement(pathArray);
-			System.out.println(selectStatement);
+			//System.out.println(selectStatement);
 			
 			statement = connection.createStatement();
 			ResultSet rs = statement.executeQuery(selectStatement);
@@ -47,8 +42,18 @@ public class URLMovieServlet extends HttpServlet {
 			rs.next();
 			
 			String resultString = (rs.getObject(1).toString());
-			resultString = formatJSON(resultString);
-			System.out.println(resultString);
+			JSONArray jsonResultArray = new JSONArray(resultString);
+			if(jsonResultArray.length()  == 1) {
+				
+				JSONObject jsonResultObject = new JSONObject(resultString.replace("]", "").replace("[", ""));
+				System.out.println(jsonResultObject.toString(4));
+				
+			}else {
+				
+				System.out.println(jsonResultArray.toString(4));
+				
+			}
+			
 			
 		} catch (MalformedURLException e1) {
 			// TODO Auto-generated catch block
@@ -59,13 +64,6 @@ public class URLMovieServlet extends HttpServlet {
 			e.printStackTrace();	
 		}
 			
-	}
-		
-	
-	
-	@Override
-	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-	
 	}
 	
 	private static String[] sanitizeEndPoint(URL url) {
@@ -140,16 +138,6 @@ public class URLMovieServlet extends HttpServlet {
 		}else {
 			return false;
 		}
-	}
-	
-	private static String formatJSON(String s) {
-		
-		s = s.replace("[", "[ \n    ");
-		s = s.replace("},", "},\n    ");
-		s = s.replace("{\"", "{ \n    \"");
-		
-		return s;
-		
 	}
 	
 }
