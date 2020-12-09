@@ -1,4 +1,4 @@
-package Initialization;
+package initialization;
 
 //Insert data from CSV file to database scanner code
 

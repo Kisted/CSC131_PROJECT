@@ -47,12 +47,12 @@ public class AwardsAPIServlet extends HttpServlet {
 			//see if the element begins with 'search'. If it does, we use a different helper method to build our select Statement.
 			if(pathArray.length ==1 && pathArray[0].startsWith("search")) {
 				
-				selectStatement = APIHelper.BuildSearchSQLSelectStatement(req, resp);
-			
+				selectStatement = APIHelper.buildSearchSQLSelectStatement(req, resp);
+				
 			//if the path array has more than one element or it does not begin with the string 'search', we use the default helper method.
 			}else {
 				
-			 selectStatement = APIHelper.BuildSQLSelectStatement(pathArray);
+			 selectStatement = APIHelper.buildSQLSelectStatement(pathArray);
 			
 			}
 			//prepares to execute the select statement on the SQL server

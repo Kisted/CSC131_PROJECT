@@ -1,4 +1,4 @@
-package Initialization;
+package initialization;
 
 public class Awards {
 	  private int year;
@@ -7,14 +7,14 @@ public class Awards {
 	  private String entity;
 
 	  // constructor for Awards
-	 /* Awards(int year, String category, boolean winner, String entity) {
+	  Awards(int year, String category, boolean winner, String entity) {
 	    this.year = year;
 	    this.category = category;
 	    this.winner = winner;
 	    this.entity = entity;
 
 	  }
-*/
+
 	  // getter for year
 	  public int getYear() {
 	    return year;

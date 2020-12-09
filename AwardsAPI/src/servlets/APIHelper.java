@@ -32,7 +32,7 @@ public class APIHelper {
 	}
 	
 	//Default helper method to build our selectStatement
-	public static String BuildSQLSelectStatement(String pathArray[]) {
+	public static String buildSQLSelectStatement(String pathArray[]) {
 		
 		//dummy variables to use in string logic
 		String column1 = "year";
@@ -71,13 +71,13 @@ public class APIHelper {
 			}
 		}
 		//organizational statement appended to selectStatement to order our results
-		selectStatement = selectStatement.concat(" ORDER BY year ASC, Entity ASC, category ASC FOR JSON AUTO ");
+		selectStatement = selectStatement.concat(" ORDER BY year ASC, Entity ASC, category ASC FOR JSON AUTO");
 		
 		return selectStatement;
 	}
 	
 	//Helper method when the servlet detects that a search query is being made
-	public static String BuildSearchSQLSelectStatement(HttpServletRequest req, HttpServletResponse resp) {
+	public static String buildSearchSQLSelectStatement(HttpServletRequest req, HttpServletResponse resp) {
 		
 		// initial select Statement stub
 		String stub = "select * from awards where ";
@@ -138,11 +138,13 @@ public class APIHelper {
 				}
 				
 				//checks to see if selectStatement is unchanged
-			} if (selectStatement.equals(stub)) {
-				
-				selectStatement = selectStatement.concat("year = -1" );
-				
-			}
+			} 
+		}
+		
+		if (selectStatement.equals(stub)) {
+			
+			selectStatement = selectStatement.concat("year = -1" );
+			
 		}
 		
 		selectStatement = selectStatement.concat(" ORDER BY year ASC, Entity ASC, category ASC FOR JSON AUTO ");

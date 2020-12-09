@@ -9,5 +9,6 @@
 	<classpathentry kind="lib" path="lib/json-20201115.jar"/>
 	<classpathentry kind="lib" path="lib/servlet-api-3.1.jar"/>
 	<classpathentry kind="lib" path="lib/mssql-jdbc-8.4.1.jre11.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
