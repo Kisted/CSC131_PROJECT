@@ -5,6 +5,8 @@ ABOUT:
 
 The AWARDS API provides access to an underlying databse utilizing natural-language and intuitive pathing. It does this by collapsing client-generated URLs into valid SQL statements which pull the intended information from the database, regardless of order.
 
+HOSTING: This API was designed on a Jetty container, and thus the host and port while using Jetty is localhost:8080. This software is adaptable to any host with minor refactoring, allowing it to be ported to a dedicated server, in which case the host is defined by the server used.
+
 STRUCTURE:
 
 The AWARDS API takes an HTTP-style GET request and utilizes the address of the resource to navigate through the columns of the table, reverse generating key-value pairs off of each step in the URL path. As such, order of the values is irrelevant, they are dynamically assigned to an appropriate key. In order to make a call to the API, at least one value must be requested. The API supports up to three values at a time, so long as each one can be assigned a unique key. Any invalid request or conflicting requests should return an empty set.

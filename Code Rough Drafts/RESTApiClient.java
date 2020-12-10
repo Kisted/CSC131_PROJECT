@@ -1,4 +1,3 @@
-package client;
 import java.io.IOException;
 import java.util.Scanner;
 import java.net.HttpURLConnection;
@@ -6,7 +5,7 @@ import java.net.URL;
 import org.json.JSONObject;
 import org.json.JSONArray;
 
-public class AwardsClient {
+public class RESTApiClient {
 	
 	public static void displayCategories() {
 		
@@ -69,6 +68,9 @@ public class AwardsClient {
 		
 		String urlString = "http://localhost:8080/";
 		
+		catInput = catInput.replaceAll("\\s+", "+");
+		winnerInput = winnerInput.replaceAll("\\s+", "+");
+		
 		if (catInput != null) {
 			urlString += catInput + "/";
 		}
@@ -80,8 +82,8 @@ public class AwardsClient {
 		if(winnerInput != null) {
 			urlString += winnerInput;
 		}
-		System.out.println(urlString);
 		
+		//url should be changed to presenters directories
 		HttpURLConnection connection = (HttpURLConnection) new URL(urlString).openConnection();
 		
 		connection.setRequestMethod("GET");
@@ -89,7 +91,7 @@ public class AwardsClient {
 		
 		if(responseCode == 200) {
 			Scanner scanner = new Scanner(connection.getInputStream());
-			String response = "";
+			String response = " ";
 			
 			while(scanner.hasNextLine()) {
 				response += scanner.nextLine();
@@ -113,7 +115,7 @@ public class AwardsClient {
 		System.out.println("This database provides past Oscar winners dating back to 1927 and up to 2017");
 		System.out.println("You may search the database by Year but also by Award Category");
 		System.out.println("You can also decide to search for the winners or losers of the aforementioned year and/or category");
-		System.out.println("Ommitting one or more of these criteria will display a collection of all results that match your criteria\n");
+		System.out.println("Ommitting one or more of these criteria will display a collection of results that match your criteria\n");
 		
 		boolean exit = false;
 		
@@ -125,14 +127,12 @@ public class AwardsClient {
 			System.out.println("Otherwise, please enter the Award Category below\n");		
 			
 			String catInput = scanner.nextLine();
-			catInput = catInput.replace(" ","+");
 			
 			if (catInput.equalsIgnoreCase("list")) {
 				displayCategories();
 				System.out.println("Please enter the Award Category below\n");
 				catInput = scanner.nextLine();
-				catInput = catInput.replace(" ","+");
-			} else if (catInput.strip().equalsIgnoreCase("skip")) {
+			} else if (catInput.equalsIgnoreCase("skip")) {
 				catInput = null;
 			}
 				
@@ -172,17 +172,10 @@ public class AwardsClient {
 			
 			//Displaying Results
 			String jsonString = getAwardData(catInput, yearInput, winnerInput);
+			JSONObject jsonObject = new JSONObject(jsonString);
 			
-			System.out.println("RESULTS:\n");
-			System.out.println(jsonString);
+			System.out.println("RESULTS");
 			
-			
-			//commenting out conversion to JSON Object; logic needs to be implemented that would allow for it to handle collection resources,
-			//and it will do for our demo purposes to just print out the JSON string.
-			//JSONObject jsonObject = new JSONObject(jsonString);
-			
-			
-			/*
 			JSONArray jsonArrayEntity = (JSONArray) jsonObject.get("Entity");
 			JSONArray jsonArrayCategory = (JSONArray) jsonObject.get("Category");
 			JSONArray jsonArrayYear = (JSONArray) jsonObject.get("Year");
@@ -208,7 +201,7 @@ public class AwardsClient {
 				jsonItr++;
 			}
 			
-			*/
+			
 			System.out.println("To exit type \"EXIT\"");
 			System.out.println("To make another search, press any key");
 			String finalInput = scanner.nextLine();
@@ -217,10 +210,9 @@ public class AwardsClient {
 				exit = true;
 			}
 		}
-		scanner.close();
+		
 	}
 
-	//public static String getAwardData(String )
 	
 }
 
